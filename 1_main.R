@@ -136,7 +136,7 @@ people$ethnicity <- gsub("ethnicity_","", people$ethnicity)
 people$month_of_birth <- gsub("month_of_birth_","",people$month_of_birth)
 people$gestational_age <- gsub("gestational_age_","", people$gestational_age)
 
-write.csv(people, "1_people.csv")
+write.csv(people, "1_people.csv", row.names=FALSE)
 
 all_items <- ls()
 all_items <- all_items[!(all_items %in% c("people"))]
