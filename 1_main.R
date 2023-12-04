@@ -1,3 +1,4 @@
+options(scipen = 999)
 n_people <- 500000
 
 #gender = 50/50
@@ -75,6 +76,33 @@ rm(list = month_of_birth_objects)
 imd_deciles <- 1:10
 imd_deciles <- rep(imd_deciles, n_people/length(imd_deciles))
 
+#gestational age distribution https://www.bmj.com/content/371/bmj.m4075
+gestational_age_less_than_28 <- 0.2
+gestational_age_28_29 <- 0.2
+gestational_age_31 <- 0.2
+gestational_age_3_32 <- 0.3
+gestational_age_33 <- 0.4
+gestational_age_34 <- 0.7
+gestational_age_35 <- 1.1
+gestational_age_36 <- 2.3
+gestational_age_37 <- 5.3
+gestational_age_38 <- 13.5
+gestational_age_39 <- 22.7
+gestational_age_40 <- 28.3
+gestational_age_41 <- 20.6
+gestational_age_42 <- 4.3
+gestational_age_objects <- ls()
+gestational_age_objects <- gestational_age_objects[grepl("gestational_age_",gestational_age_objects)]
+gestational_age_data <- c()
+for(ga in gestational_age_objects){
+  temp <- get(ga)
+  temp <- n_people * (temp/100)
+  temp <- rep(ga, temp)
+  gestational_age_data <- c(gestational_age_data, temp)
+}
+gestational_age_data <- sample(gestational_age_data,n_people)
+
+
 generate_pmr <- function(i){
   temp <- paste0(sample(c(0:9, LETTERS[1:6]), 16, T), collapse = '')
   temp <- paste0("CCF",temp)
@@ -93,16 +121,22 @@ ehids <- lapply(1:n_people, generate_ehis)
 ehids <- unique(unlist(ehids))
 
 
+
+
 people <- data.frame(
   PupilMatchingRefAnonymous = pmrs,
                      encrypted_hesid = ehids,
                      month_of_birth = sample(month_of_birth_data, n_people),
                      gender = sample(gender, n_people),
                      ethnicity = sample(all_ethnicity_data, n_people),
-                     imd_deciles = sample(imd_deciles, n_people)
+                     imd_deciles = sample(imd_deciles, n_people),
+                      gestational_age = sample(gestational_age_data, n_people)
 )
 people$ethnicity <- gsub("ethnicity_","", people$ethnicity)
 people$month_of_birth <- gsub("month_of_birth_","",people$month_of_birth)
+people$gestational_age <- gsub("gestational_age_","", people$gestational_age)
+
+write.csv(people, "1_people.csv")
 
 all_items <- ls()
 all_items <- all_items[!(all_items %in% c("people"))]
