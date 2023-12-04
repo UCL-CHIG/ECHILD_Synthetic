@@ -104,3 +104,7 @@ people <- data.frame(
 people$ethnicity <- gsub("ethnicity_","", people$ethnicity)
 people$month_of_birth <- gsub("month_of_birth_","",people$month_of_birth)
 
+all_items <- ls()
+all_items <- all_items[!(all_items %in% c("people"))]
+rm(list = all_items)
+rm(all_items)
