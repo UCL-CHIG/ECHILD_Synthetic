@@ -1,4 +1,4 @@
-setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic")
+setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
 
 if(!file.exists("1_people.csv")){
   source("1_main.R")

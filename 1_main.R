@@ -1,3 +1,4 @@
+setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
 options(scipen = 999)
 n_people <- 500000
 
@@ -79,8 +80,8 @@ imd_deciles <- rep(imd_deciles, n_people/length(imd_deciles))
 #gestational age distribution https://www.bmj.com/content/371/bmj.m4075
 gestational_age_less_than_28 <- 0.2
 gestational_age_28_29 <- 0.2
-gestational_age_31 <- 0.2
-gestational_age_3_32 <- 0.3
+gestational_age_30_31 <- 0.3
+gestational_age_32 <- 0.3
 gestational_age_33 <- 0.4
 gestational_age_34 <- 0.7
 gestational_age_35 <- 1.1
