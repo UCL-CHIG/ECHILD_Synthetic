@@ -1,6 +1,7 @@
 setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
 library(sjPlot)
 library(gtsummary)
+library(dplyr)
 
 spine <- read.csv("2_spine.csv")
 npd <- read.csv("3_KS1.csv")
@@ -44,6 +45,9 @@ gestat_and_ks1$gestat <- ordered(gestat_and_ks1$gestat, levels = c("less_than_28
 plot(as.numeric(gestat_and_ks1$gestat) ,gestat_and_ks1$mean,xaxt = 'n', xlab = "Gestational Age", ylab = "Standardised KS1 Maths score", ylim = c(min(gestat_and_ks1$lower), max(gestat_and_ks1$upper)), type = "p")
 axis(1, at = c(as.numeric(gestat_and_ks1$gestat)), labels = c(as.character(gestat_and_ks1$gestat)))
 segments(as.numeric(gestat_and_ks1$gestat), gestat_and_ks1$lower, as.numeric(gestat_and_ks1$gestat), gestat_and_ks1$upper)
+
+tbl_summary(combine, include = c(gestat,KS1_MONTHOFBIRTH,KS1_GENDER,KS1_MATH,imd04_decile), by = gestat) %>% add_n() %>% add_p()
+
 
 glm_ks1 <- glm(KS1_MATH ~ gestat + KS1_MONTH_PART  + as.factor(KS1_GENDER) + as.factor(ethnos) + imd04_decile, data =combine)
 tab_model(glm_ks1, ci_method = "wald")
