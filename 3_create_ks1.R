@@ -40,10 +40,13 @@ if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
   
   people$gestational_age <- ordered(people$gestational_age, levels = c("less_than_28","28_29","30_31","32","33","34","35","36","37","38","39","40","41","42"))
   people$gestational_age_num <- as.numeric(people$gestational_age)
+  people$gestational_age_num_randomness <- sample(runif(nrow(people), min = 0.5, max = 1.5), nrow(people))
+
+  increments = rep((1-5)/12, nrow(people))
+  increments_randomness <- runif(nrow(people), min = 0.7, max = 1.2)
   
-  increments = (1-5)/12
-  people$score_temp <- ifelse(people$gestational_age_num >= 1 & people$gestational_age_num <= 12, 5 - (people$gestational_age_num * increments), NA)
-  people$score_temp <- ifelse(people$gestational_age_num > 12, 5 - ((people$gestational_age_num - ((people$gestational_age_num - 12)*2))*increments), people$score_temp)
+  people$score_temp <- ifelse(people$gestational_age_num >= 1 & people$gestational_age_num <= 12, 5 - (people$gestational_age_num * increments * people$gestational_age_num_randomness), NA)
+  people$score_temp <- ifelse(people$gestational_age_num > 12, 5 - ((people$gestational_age_num - ((people$gestational_age_num - 12)*2))*increments * people$gestational_age_num_randomness), people$score_temp)
   people$score_adjustment_gender <- runif(nrow(people), min = 0, max = 0.1)
   people$score_adjustment_gender <- ifelse(people$gender == 0,0, people$score_adjustment_gender)
   
@@ -59,6 +62,18 @@ if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
   rands <- runif(nrow(people), -0.1, 0.1)
   people$score_normalised <- people$score_normalised + rands
   people$KS1_MATH <- people$score_normalised
+  
+  for(i in unique(people$gestational_age_num)){
+      coinflip <- sample(c(0,1),1)
+      
+      if(coinflip == 0){
+        random <- runif(1, min = -1, max = 1)
+        people$KS1_MATH <- ifelse(people$gestational_age_num == i, people$KS1_MATH + random,people$KS1_MATH)
+      }
+      
+  }
+  
+  plot(people$gestational_age_num, people$KS1_MATH)
   
   people$KS1_MONTH_PART <- ifelse(people$month_of_birth == "sep", 0, people$KS1_MONTH_PART)
   

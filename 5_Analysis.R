@@ -13,41 +13,53 @@ combine <- merge(combine, hes, by = "encrypted_hesid", all.x=TRUE)
 #tabulating gender in NPD and Sex in HES
 table(combine$KS1_GENDER, combine$sex)
 
-#set imd levels
-combine$imd04_decile <- ordered(combine$imd04_decile, levels = c("Least Deprived 10%", "Less Deprived 10% - 20%", "Less Deprived 20% - 30%","Less Deprived 30% - 40%", "Less Deprived 40% - 50%", "More Deprived 40% - 50%","More Deprived 30% - 40%", "More Deprived 20% - 30%",  "More Deprived 10% - 20%" , "Most Deprived 10%"   ))
 
-#set gestat levels
+
+
+generate_aggregate_results <- function(column_name, levs){
+  out <- data.frame()
+  for(val in unique(combine[[column_name]])){
+    temp <- subset(combine, combine[[column_name]] == val)
+    out <- rbind(out, data.frame(variable = val, 
+                                 median = median(temp$KS1_MATH, na.rm=TRUE),
+                                 lower = quantile(temp$KS1_MATH, 0.25, na.rm=TRUE),
+                                 upper =quantile(temp$KS1_MATH, 0.75, na.rm=TRUE)
+                                 
+                                 ))
+  }
+  
+  out$variable <- ordered(out$variable, levels = levs)
+  out <- out[order(out$variable),]
+  row.names(out) <- NULL
+  colnames(out) <- c(column_name, "median","lower","upper")
+  return(out)
+}
+
+gestat_and_ks1 <- generate_aggregate_results("gestat", c("less_than_28","28_29","30_31","32","33","34","35","36","37","38","39","40","41","42"))
+imd_and_ks1 <- generate_aggregate_results("imd04_decile", c("Least Deprived 10%", "Less Deprived 10% - 20%", "Less Deprived 20% - 30%","Less Deprived 30% - 40%", "Less Deprived 40% - 50%", "More Deprived 40% - 50%","More Deprived 30% - 40%", "More Deprived 20% - 30%",  "More Deprived 10% - 20%" , "Most Deprived 10%"))
+gender_and_ks1 <- generate_aggregate_results("KS1_GENDER",c("M","F"))
+month_and_ks1 <- generate_aggregate_results("KS1_MONTH_PART", c(0,11,10,9,8,7,6,5,4,3,2,1))
+
+plotit <- function(x_values, y_values, lower_ci, upper_ci, xLab, yLab, Main){
+  plot(as.numeric(x_values) ,y_values,xaxt = 'n', xlab = xLab, ylab = yLab, ylim = c(min(lower_ci), max(upper_ci)), type = "p", main = Main)
+  axis(1, at = c(as.numeric(x_values)), labels = c(as.character(x_values)))
+  segments(as.numeric(x_values), lower_ci, as.numeric(x_values), upper_ci)
+  lm <- glm(y_values ~ as.numeric(x_values))
+  abline(lm)
+}
+
+
+par(mfcol = c(2,3))
+hist(combine$KS1_MATH, main = "Histogram of KS1 Scores", xlab = "KS1 Score", ylab = "Frequency")
+plotit(gestat_and_ks1$gestat, gestat_and_ks1$median, gestat_and_ks1$lower, gestat_and_ks1$upper, "Gestational Age","Median KS1 Maths Score (z-score) [IQR]", "Gestational Age and Standardised median score")
+plotit(imd_and_ks1$imd04_decile, imd_and_ks1$median, imd_and_ks1$lower, imd_and_ks1$upper, "IMD Decile","Median KS1 Maths Score (z-score) [IQR]", "IMD Decile and Standardised median score")
+plotit(gender_and_ks1$KS1_GENDER, gender_and_ks1$median, gender_and_ks1$lower, gender_and_ks1$upper, "Gender","Median KS1 Maths Score (z-score) [IQR]", "Gender and Standardised median score")
+plotit(month_and_ks1$KS1_MONTH_PART, month_and_ks1$median, month_and_ks1$lower, month_and_ks1$upper, "Relative Month of Birth", "Median KS1 Maths Score (z-score) [IQR]", "Relative Age and Standardised median score")
+
+
+combine$KS1_MONTH_PART <- ordered(combine$KS1_MONTH_PART, levels = c(0,11,10,9,8,7,6,5,4,3,2,1))
+combine$imd04_decile <- ordered(combine$imd04_decile, levels = c("Least Deprived 10%", "Less Deprived 10% - 20%", "Less Deprived 20% - 30%","Less Deprived 30% - 40%", "Less Deprived 40% - 50%", "More Deprived 40% - 50%","More Deprived 30% - 40%", "More Deprived 20% - 30%",  "More Deprived 10% - 20%" , "Most Deprived 10%"))
 combine$gestat <- ordered(combine$gestat, levels = c("less_than_28","28_29","30_31","32","33","34","35","36","37","38","39","40","41","42"))
 
 
-#calculating mean and ci for ks1_math given birth characteristics
-gestat_and_ks1 <- data.frame()
-for(iGestat in unique(combine$gestat)){
-  temp <- subset(combine, gestat == iGestat)
-  
-  n <- nrow(temp)
-  ks1_mean <- mean(temp$KS1_MATH, na.rm=TRUE)
-  ks1_sd <- sd(temp$KS1_MATH, na.rm=TRUE)
-  ks1_se <- ks1_sd/sqrt(n)
-  
-  t_score <- 1.962349
-  margin_error <- t_score * ks1_se
-  
-  lower <- ks1_mean - margin_error
-  upper <- ks1_mean + margin_error
-  
-  temp <- data.frame(gestat = iGestat, mean = ks1_mean, lower = lower, upper = upper)
-  gestat_and_ks1 <- rbind(temp, gestat_and_ks1)
-}
-gestat_and_ks1$gestat <- as.factor(gestat_and_ks1$gestat)
-gestat_and_ks1$gestat <- ordered(gestat_and_ks1$gestat, levels = c("less_than_28","28_29","30_31","32","33","34","35","36","37","38","39","40","41","42"))
-
-plot(as.numeric(gestat_and_ks1$gestat) ,gestat_and_ks1$mean,xaxt = 'n', xlab = "Gestational Age", ylab = "Standardised KS1 Maths score", ylim = c(min(gestat_and_ks1$lower), max(gestat_and_ks1$upper)), type = "p")
-axis(1, at = c(as.numeric(gestat_and_ks1$gestat)), labels = c(as.character(gestat_and_ks1$gestat)))
-segments(as.numeric(gestat_and_ks1$gestat), gestat_and_ks1$lower, as.numeric(gestat_and_ks1$gestat), gestat_and_ks1$upper)
-
 tbl_summary(combine, include = c(gestat,KS1_MONTHOFBIRTH,KS1_GENDER,KS1_MATH,imd04_decile), by = gestat) %>% add_n() %>% add_p()
-
-
-glm_ks1 <- glm(KS1_MATH ~ gestat + KS1_MONTH_PART  + as.factor(KS1_GENDER) + as.factor(ethnos) + imd04_decile, data =combine)
-tab_model(glm_ks1, ci_method = "wald")
