@@ -9,6 +9,7 @@ hes <- read.csv("4_HES.csv")
 
 combine <- merge(npd, spine, by = "PupilMatchingRefAnonymous", all.x=TRUE)
 combine <- merge(combine, hes, by = "encrypted_hesid", all.x=TRUE)
+combine$any_comorbidity <- ifelse(!is.na(combine$diag_02),"Yes","No")
 
 #tabulating gender in NPD and Sex in HES
 table(combine$KS1_GENDER, combine$sex)
@@ -39,6 +40,7 @@ gestat_and_ks1 <- generate_aggregate_results("gestat", c("less_than_28","28_29",
 imd_and_ks1 <- generate_aggregate_results("imd04_decile", c("Least Deprived 10%", "Less Deprived 10% - 20%", "Less Deprived 20% - 30%","Less Deprived 30% - 40%", "Less Deprived 40% - 50%", "More Deprived 40% - 50%","More Deprived 30% - 40%", "More Deprived 20% - 30%",  "More Deprived 10% - 20%" , "Most Deprived 10%"))
 gender_and_ks1 <- generate_aggregate_results("KS1_GENDER",c("M","F"))
 month_and_ks1 <- generate_aggregate_results("KS1_MONTH_PART", c(0,11,10,9,8,7,6,5,4,3,2,1))
+comorbidity_and_ks1 <- generate_aggregate_results("any_comorbidity", c("No","Yes"))
 
 plotit <- function(x_values, y_values, lower_ci, upper_ci, xLab, yLab, Main){
   plot(as.numeric(x_values) ,y_values,xaxt = 'n', xlab = xLab, ylab = yLab, ylim = c(min(lower_ci), max(upper_ci)), type = "p", main = Main)
@@ -51,10 +53,11 @@ plotit <- function(x_values, y_values, lower_ci, upper_ci, xLab, yLab, Main){
 
 par(mfcol = c(2,3))
 hist(combine$KS1_MATH, main = "Histogram of KS1 Scores", xlab = "KS1 Score", ylab = "Frequency")
-plotit(gestat_and_ks1$gestat, gestat_and_ks1$median, gestat_and_ks1$lower, gestat_and_ks1$upper, "Gestational Age","Median KS1 Maths Score (z-score) [IQR]", "Gestational Age and Standardised median score")
 plotit(imd_and_ks1$imd04_decile, imd_and_ks1$median, imd_and_ks1$lower, imd_and_ks1$upper, "IMD Decile","Median KS1 Maths Score (z-score) [IQR]", "IMD Decile and Standardised median score")
+plotit(gestat_and_ks1$gestat, gestat_and_ks1$median, gestat_and_ks1$lower, gestat_and_ks1$upper, "Gestational Age","Median KS1 Maths Score (z-score) [IQR]", "Gestational Age and Standardised median score")
 plotit(gender_and_ks1$KS1_GENDER, gender_and_ks1$median, gender_and_ks1$lower, gender_and_ks1$upper, "Gender","Median KS1 Maths Score (z-score) [IQR]", "Gender and Standardised median score")
 plotit(month_and_ks1$KS1_MONTH_PART, month_and_ks1$median, month_and_ks1$lower, month_and_ks1$upper, "Relative Month of Birth", "Median KS1 Maths Score (z-score) [IQR]", "Relative Age and Standardised median score")
+plotit(comorbidity_and_ks1$any_comorbidity, comorbidity_and_ks1$median, comorbidity_and_ks1$lower, comorbidity_and_ks1$upper, "Any comorbidities at birth", "Median KS1 Maths Score (z-score) [IQR]", "Comorbidity at birth and Standardised median score")
 
 
 combine$KS1_MONTH_PART <- ordered(combine$KS1_MONTH_PART, levels = c(0,11,10,9,8,7,6,5,4,3,2,1))
