@@ -1,4 +1,4 @@
-setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
+setwd("S:/ICH_PPP_CENB_CEBCH/Matthew/TEACHING/ECHILD/ECHILD_Synthetic-main")
 library(sjPlot)
 library(gtsummary)
 library(dplyr)
@@ -7,14 +7,12 @@ spine <- read.csv("2_spine.csv")
 npd <- read.csv("3_KS1.csv")
 hes <- read.csv("4_HES.csv")
 
-combine <- merge(npd, spine, by = "PupilMatchingRefAnonymous", all.x=TRUE)
-combine <- merge(combine, hes, by = "encrypted_hesid", all.x=TRUE)
-combine$any_comorbidity <- ifelse(!is.na(combine$diag_02),"Yes","No")
+combine <- merge(npd, spine, by = "PupilMatchingRefAnonymous", all.x = TRUE)
+combine <- merge(combine, hes, by = "encrypted_hesid", all.x = TRUE)
+combine$any_comorbidity <- ifelse(!is.na(combine$diag_02), "Yes", "No")
 
 #tabulating gender in NPD and Sex in HES
 table(combine$KS1_GENDER, combine$sex)
-
-
 
 
 generate_aggregate_results <- function(column_name, levs){
@@ -63,6 +61,10 @@ plotit(comorbidity_and_ks1$any_comorbidity, comorbidity_and_ks1$median, comorbid
 combine$KS1_MONTH_PART <- ordered(combine$KS1_MONTH_PART, levels = c(0,11,10,9,8,7,6,5,4,3,2,1))
 combine$imd04_decile <- ordered(combine$imd04_decile, levels = c("Least Deprived 10%", "Less Deprived 10% - 20%", "Less Deprived 20% - 30%","Less Deprived 30% - 40%", "Less Deprived 40% - 50%", "More Deprived 40% - 50%","More Deprived 30% - 40%", "More Deprived 20% - 30%",  "More Deprived 10% - 20%" , "Most Deprived 10%"))
 combine$gestat <- ordered(combine$gestat, levels = c("less_than_28","28_29","30_31","32","33","34","35","36","37","38","39","40","41","42"))
+combine$resgor <- ordered(combine$resgor, levels = c("A", "B", "D", "E", "F", "G", "H", "J", "K", "S", "W"))
 
-
-tbl_summary(combine, include = c(gestat,KS1_MONTHOFBIRTH,KS1_GENDER,KS1_MATH,imd04_decile), by = gestat) %>% add_n() %>% add_p()
+tbl_summary(combine, include = c(gestat,KS1_MONTHOFBIRTH,
+                                 KS1_GENDER,KS1_MATH,
+                                 imd04_decile,
+                                 resgor),
+            by = gestat) %>% add_n() %>% add_p()
