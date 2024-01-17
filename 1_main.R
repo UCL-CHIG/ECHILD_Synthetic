@@ -1,9 +1,9 @@
-setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
+setwd("S:/ICH_PPP_CENB_CEBCH/Matthew/TEACHING/ECHILD/ECHILD_Synthetic-main")
 options(scipen = 999)
 n_people <- 500000
 
 #gender = 50/50
-gender <- sample(c(0,1),n_people, replace=TRUE)
+gender <- sample(c(0, 1), n_people, replace=TRUE)
 
 #ethnicity
 #https://www.ethnicity-facts-figures.service.gov.uk/uk-population-by-ethnicity/national-and-regional-populations/population-of-england-and-wales/latest
@@ -103,6 +103,36 @@ for(ga in gestational_age_objects){
 }
 gestational_age_data <- sample(gestational_age_data,n_people)
 
+# resgor
+# based on 2008 data
+# https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/datasets/birthsbyareaofusualresidenceofmotheruk
+
+resgor_north_east <- 4
+resgor_north_west <- 13
+resgor_yorkshire_humber <- 10
+resgor_east_midlands <- 8
+resgor_west_midlands <- 11
+resgor_east <- 11
+resgor_london <- 19
+resgor_south_east <- 15
+resgor_south_west <- 9
+
+resgor_objects <- ls()
+all_resgor_objects <- resgor_objects[grepl("resgor_", resgor_objects)]
+
+all_resgor_data <- c()
+for(i in all_resgor_objects){
+  temp <- get(i)
+  temp <- rep(i, n_people * temp/100)
+  all_resgor_data <- c(all_resgor_data, temp)
+}
+
+all_resgor_data <- sample(all_resgor_data, n_people)
+rm(list = all_resgor_objects)
+
+all_resgor_data[sample(1:n_people, n_people * 0.005)] <- "resgor_scotland"
+all_resgor_data[sample(1:n_people, n_people * 0.005)] <- "resgor_wales"
+
 
 generate_pmr <- function(i){
   temp <- paste0(sample(c(0:9, LETTERS[1:6]), 16, T), collapse = '')
@@ -131,11 +161,14 @@ people <- data.frame(
                      gender = sample(gender, n_people),
                      ethnicity = sample(all_ethnicity_data, n_people),
                      imd_deciles = sample(imd_deciles, n_people),
-                      gestational_age = sample(gestational_age_data, n_people)
+                     gestational_age = sample(gestational_age_data, n_people),
+                     resgor_birth = sample(all_resgor_data, n_people)
 )
+
 people$ethnicity <- gsub("ethnicity_","", people$ethnicity)
 people$month_of_birth <- gsub("month_of_birth_","",people$month_of_birth)
 people$gestational_age <- gsub("gestational_age_","", people$gestational_age)
+people$resgor_birth <- gsub("resgor_","", people$resgor_birth)
 
 write.csv(people, "1_people.csv", row.names=FALSE)
 
