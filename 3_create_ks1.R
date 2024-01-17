@@ -1,4 +1,5 @@
-setwd("C:/Users/stitch/Documents/GitHub/ECHILD_Synthetic")
+setwd("S:/ICH_PPP_CENB_CEBCH/Matthew/TEACHING/ECHILD/ECHILD_Synthetic-main")
+library(scales)
 
 if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
   source("2_spine.R")
@@ -75,7 +76,34 @@ if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
   
   plot(people$gestational_age_num, people$KS1_MATH)
   
+  
+  for(i in unique(people$imd_deciles)){
+    coinflip <- sample(c(0,1),1)
+    
+    if(coinflip == 0){
+      random <- runif(1, min = -0.5, max = 0.5)
+      people$KS1_MATH <- ifelse(people$imd_deciles == i, people$KS1_MATH + random, people$KS1_MATH)
+    }
+    
+  }
+  
+  plot(people$imd_deciles, people$KS1_MATH)
+  
   people$KS1_MONTH_PART <- ifelse(people$month_of_birth == "sep", 0, people$KS1_MONTH_PART)
+  
+  for(i in unique(people$KS1_MONTH_PART)){
+    coinflip <- sample(c(0,1),1)
+    
+    if(coinflip == 0){
+      random <- runif(1, min = -0.5, max = 0.5)
+      people$KS1_MATH <- ifelse(people$KS1_MONTH_PART == i, people$KS1_MATH + random, people$KS1_MATH)
+    }
+    
+  }
+  
+  plot(people$KS1_MONTH_PART, people$KS1_MATH)
+  
+  people$KS1_MATH <- rescale(people$KS1_MATH, to = c(0, 100))
   
   KS1_DATA <- subset(people, select = c("PupilMatchingRefAnonymous","KS1_ACADYR","KS1_YEAROFBIRTH","KS1_MONTHOFBIRTH","KS1_AGE_START","KS1_MONTH_PART","KS1_GENDER","KS1_MATH"))
   write.csv(KS1_DATA, "3_KS1.csv", row.names=FALSE)
