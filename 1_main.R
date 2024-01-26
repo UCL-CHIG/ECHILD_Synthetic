@@ -36,7 +36,7 @@ decimal2AltBase <- function(numbers, alt_base, num_length, digits) {
   return(alt_vals)
 }
 
-#' Generate IDS
+#' Generate IDs
 #'
 #' @param number How many IDs to generate
 #' @param digits The set of characters to use as digits
@@ -84,6 +84,7 @@ generateIDs <- function(number, digits, id_length, prefix = "", suffix = "") {
   }
   
   sample_ids <- paste0(prefix, sample_ids, suffix)
+  return(sample_ids)
 }
 
 #gender = 50/50
