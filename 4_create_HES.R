@@ -85,7 +85,7 @@ if (!file.exists("2_spine.csv") & !file.exists("1_people.csv")) {
   people$resgor <- ifelse(people$resgor == "scotland", "S", people$resgor)
   people$resgor <- ifelse(people$resgor == "wales", "W", people$resgor)
   
-  hes <- subset(people, select = c("encrypted_hesid", "epikey", "epitype", "epiorder",
+  hes <- subset(people, select = c("tokenid", "epikey", "epitype", "epiorder",
                                    "epistart", "epiend", "admistart", "disdate",
                                    "admimeth", "sex", "ethnos", "resgor", "imd04_decile", 
                                    "gestat", "diag_01","diag_02"))
