@@ -8,7 +8,7 @@ npd <- read.csv("3_KS1.csv")
 hes <- read.csv("4_HES.csv")
 
 combine <- merge(npd, spine, by = "PupilMatchingRefAnonymous", all.x = TRUE)
-combine <- merge(combine, hes, by = "encrypted_hesid", all.x = TRUE)
+combine <- merge(combine, hes, by = "tokenid", all.x = TRUE)
 combine$any_comorbidity <- ifelse(!is.na(combine$diag_02), "Yes", "No")
 
 #tabulating gender in NPD and Sex in HES
