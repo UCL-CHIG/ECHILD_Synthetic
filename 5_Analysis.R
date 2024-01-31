@@ -1,4 +1,4 @@
-setwd("S:/ICH_PPP_CENB_CEBCH/Matthew/TEACHING/ECHILD/ECHILD_Synthetic-main")
+setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic")
 library(sjPlot)
 library(gtsummary)
 library(dplyr)
@@ -9,8 +9,8 @@ hes <- read.csv("4_HES.csv")
 
 combine <- merge(npd, spine, by = "PupilMatchingRefAnonymous", all.x = TRUE)
 combine <- merge(combine, hes, by = "tokenid", all.x = TRUE)
+combine <- subset(combine, !is.na(tokenid))
 combine$any_comorbidity <- ifelse(!is.na(combine$diag_02), "Yes", "No")
-
 #tabulating gender in NPD and Sex in HES
 table(combine$KS1_GENDER, combine$sex)
 

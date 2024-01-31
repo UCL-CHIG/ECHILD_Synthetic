@@ -1,4 +1,4 @@
-setwd("S:/ICH_PPP_CENB_CEBCH/Matthew/TEACHING/ECHILD/ECHILD_Synthetic-main")
+setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic")
 library(scales)
 
 if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
