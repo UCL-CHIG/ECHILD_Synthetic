@@ -1,15 +1,21 @@
 Update 01 February 2024
 
+The code has been amended as follows: 
 - One folder for R, another for Python
 - R Spine file now updated to reflect linkage rate differentials
 - R CSV files updated
 
+Still to do: 
+- Add dichotomised SEN Provision
+- Add mortality
+- Add absences
+- Add KS2
 
 ------------------------
 
 Update 31 January 2024
 
-Deleted old *.csv files.
+- Deleted old *.csv files.
 
 ------------------------
 Update 17 January 2024
@@ -22,12 +28,12 @@ The code has been amended as follows:
 - Added resgor; 0.5% live in Wales and 0.5% in Scotland.
 - Changed the list of comorbidities to include Q43, Q24, Q35 and Q37.
 
-I have not been able to update the .csv files, which therefore do not currently reflect the above changes.
+~~I have not been able to update the .csv files, which therefore do not currently reflect the above changes.~~
 
 Still to do:
 
 - Add dichotomised SEND.
-- Vincent: We may randomly remove some people to show correlates of linkage. Nicolás' paper shows ethnicity and deprivation levels were predictable of not linking.
+~~ - Vincent: We may randomly remove some people to show correlates of linkage. Nicolás' paper shows ethnicity and deprivation levels were predictable of not linking. ~~
 
 Other notes:
 
