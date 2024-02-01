@@ -33,7 +33,7 @@ The code has been amended as follows:
 Still to do:
 
 - Add dichotomised SEND.
-~~ - Vincent: We may randomly remove some people to show correlates of linkage. Nicolás' paper shows ethnicity and deprivation levels were predictable of not linking. ~~
+~~Vincent: We may randomly remove some people to show correlates of linkage. Nicolás' paper shows ethnicity and deprivation levels were predictable of not linking.~~
 
 Other notes:
 
