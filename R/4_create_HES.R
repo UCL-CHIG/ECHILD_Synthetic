@@ -1,4 +1,4 @@
-setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic")
+setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic/R")
 options(scipen = 999)
 
 random_epikey_generator <- function(n) {

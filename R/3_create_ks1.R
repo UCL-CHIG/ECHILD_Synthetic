@@ -1,4 +1,4 @@
-setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic")
+setwd("C:/Users/ASUS/Documents/GitHub/ECHILD_Synthetic/R")
 library(scales)
 
 if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
