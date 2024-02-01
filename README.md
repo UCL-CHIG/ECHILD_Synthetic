@@ -1,3 +1,12 @@
+Update 01 February 2024
+
+- One folder for R, another for Python
+- R Spine file now updated to reflect linkage rate differentials
+- R CSV files updated
+
+
+------------------------
+
 Update 31 January 2024
 
 Deleted old *.csv files.
