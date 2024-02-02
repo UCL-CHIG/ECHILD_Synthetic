@@ -39,6 +39,7 @@ imd_and_ks1 <- generate_aggregate_results("imd04_decile", c("Least Deprived 10%"
 gender_and_ks1 <- generate_aggregate_results("KS1_GENDER",c("M","F"))
 month_and_ks1 <- generate_aggregate_results("KS1_MONTH_PART", c(0,11,10,9,8,7,6,5,4,3,2,1))
 comorbidity_and_ks1 <- generate_aggregate_results("any_comorbidity", c("No","Yes"))
+sen_and_ks1 <- generate_aggregate_results("KS1_SEN", c(0,1))
 
 plotit <- function(x_values, y_values, lower_ci, upper_ci, xLab, yLab, Main){
   plot(as.numeric(x_values) ,y_values,xaxt = 'n', xlab = xLab, ylab = yLab, ylim = c(min(lower_ci), max(upper_ci)), type = "p", main = Main)
@@ -49,13 +50,14 @@ plotit <- function(x_values, y_values, lower_ci, upper_ci, xLab, yLab, Main){
 }
 
 
-par(mfcol = c(2,3))
+par(mfcol = c(2,4))
 hist(combine$KS1_MATH, main = "Histogram of KS1 Scores", xlab = "KS1 Score", ylab = "Frequency")
 plotit(imd_and_ks1$imd04_decile, imd_and_ks1$median, imd_and_ks1$lower, imd_and_ks1$upper, "IMD Decile","Median KS1 Maths Score (z-score) [IQR]", "IMD Decile and Standardised median score")
 plotit(gestat_and_ks1$gestat, gestat_and_ks1$median, gestat_and_ks1$lower, gestat_and_ks1$upper, "Gestational Age","Median KS1 Maths Score (z-score) [IQR]", "Gestational Age and Standardised median score")
 plotit(gender_and_ks1$KS1_GENDER, gender_and_ks1$median, gender_and_ks1$lower, gender_and_ks1$upper, "Gender","Median KS1 Maths Score (z-score) [IQR]", "Gender and Standardised median score")
 plotit(month_and_ks1$KS1_MONTH_PART, month_and_ks1$median, month_and_ks1$lower, month_and_ks1$upper, "Relative Month of Birth", "Median KS1 Maths Score (z-score) [IQR]", "Relative Age and Standardised median score")
 plotit(comorbidity_and_ks1$any_comorbidity, comorbidity_and_ks1$median, comorbidity_and_ks1$lower, comorbidity_and_ks1$upper, "Any comorbidities at birth", "Median KS1 Maths Score (z-score) [IQR]", "Comorbidity at birth and Standardised median score")
+plotit(sen_and_ks1$KS1_SEN, sen_and_ks1$median, sen_and_ks1$lower, sen_and_ks1$upper, "SEN in KS1", "Median KS1 Maths Score (z-score) [IQR]", "SEN and Standardised median score")
 
 
 combine$KS1_MONTH_PART <- ordered(combine$KS1_MONTH_PART, levels = c(0,11,10,9,8,7,6,5,4,3,2,1))
@@ -66,5 +68,5 @@ combine$resgor <- ordered(combine$resgor, levels = c("A", "B", "D", "E", "F", "G
 tbl_summary(combine, include = c(gestat,KS1_MONTHOFBIRTH,
                                  KS1_GENDER,KS1_MATH,
                                  imd04_decile,
-                                 resgor),
+                                 resgor, KS1_SEN),
             by = gestat) %>% add_n() %>% add_p()

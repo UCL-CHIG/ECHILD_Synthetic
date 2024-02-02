@@ -105,6 +105,13 @@ if(!file.exists("2_spine.csv") & !file.exists("1_people.csv")){
   
   people$KS1_MATH <- rescale(people$KS1_MATH, to = c(0, 100))
   
-  KS1_DATA <- subset(people, select = c("PupilMatchingRefAnonymous","KS1_ACADYR","KS1_YEAROFBIRTH","KS1_MONTHOFBIRTH","KS1_AGE_START","KS1_MONTH_PART","KS1_GENDER","KS1_MATH"))
+  people$Ks1_SEN <- ifelse(people$KS1_MATH <= 35, 1, 0)
+  people$KS1_SEN <- ifelse(people$gestational_age_num < 7, 1, people$Ks1_SEN)
+  people$KS1_SEN <- ifelse(people$imd_deciles < 3, 1, people$KS1_SEN)
+  people$KS1_SEN_random <- round(runif(nrow(people), min = 1, max = 10),0)
+  people$KS1_SEN <- ifelse(people$KS1_SEN_random == sample(c(1:10),1), people$Ks1_SEN + 1, people$Ks1_SEN)
+  people$KS1_SEN <- ifelse(people$KS1_SEN == 2, 0, people$KS1_SEN)
+  
+  KS1_DATA <- subset(people, select = c("PupilMatchingRefAnonymous","KS1_ACADYR","KS1_YEAROFBIRTH","KS1_MONTHOFBIRTH","KS1_AGE_START","KS1_MONTH_PART","KS1_GENDER","KS1_MATH", "KS1_SEN"))
   write.csv(KS1_DATA, "3_KS1.csv", row.names=FALSE)
 }
