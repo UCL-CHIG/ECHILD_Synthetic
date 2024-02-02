@@ -1,3 +1,13 @@
+Update 02 February 2024
+- Dichotomised SEN added to KS1 and KS2
+- Added in KS2 , this is a copy of KS1 but with noise
+
+Still to do: 
+- Add mortality
+- Add absences
+
+------------------------
+
 Update 01 February 2024
 
 The code has been amended as follows: 
@@ -6,10 +16,10 @@ The code has been amended as follows:
 - R CSV files updated
 
 Still to do: 
-- Add dichotomised SEN Provision
+~~- Add dichotomised SEN Provision~~
 - Add mortality
 - Add absences
-- Add KS2
+~~- Add KS2~~
 
 ------------------------
 
