@@ -59,7 +59,7 @@ if (!file.exists("2_spine.csv") & !file.exists("1_people.csv")) {
   people$epiend <- people$disdate
   
   people$diff <- as.numeric(people$disdate - people$admistart)
-  people$diag_02 <- ifelse(people$diff >= 3, sample(c(NA, "Q43","Q24","Q35", "Q37"), replace = TRUE, size = nrow(people)), NA)
+  people$diag_02 <- ifelse(people$diff >= 3, sample(c(NA, "Q43","Q24","Q35", "Q37", "A75", "P961", "Z590"), replace = TRUE, size = nrow(people)), NA)
   
   people$imd04_decile <- ifelse(people$imd_deciles == 1, "Most Deprived 10%", NA)
   people$imd04_decile <- ifelse(people$imd_deciles == 2, "More Deprived 10% - 20%", people$imd04_decile)
@@ -87,7 +87,7 @@ if (!file.exists("2_spine.csv") & !file.exists("1_people.csv")) {
   
   hes <- subset(people, select = c("tokenid", "epikey", "epitype", "epiorder",
                                    "epistart", "epiend", "admistart", "disdate",
-                                   "admimeth", "sex", "ethnos", "resgor", "imd04_decile", 
+                                   "admimeth", "startage", "sex", "ethnos", "resgor", "imd04_decile", 
                                    "gestat", "diag_01","diag_02"))
   
   write.csv(hes, "4_HES.csv", row.names=FALSE)
